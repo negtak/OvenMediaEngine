@@ -1,9 +1,6 @@
 name: Docker Image CI 
 
 on:
-  push:
-    branches:
-    - master
   workflow_dispatch:
 
 concurrency:
@@ -11,7 +8,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  TAG: 'airensoft/ovenmediaengine:dev'
+  TAG: 'negtak/ovenmediaengine:dev'
 
 jobs:
   push_to_registry:
@@ -23,17 +20,6 @@ jobs:
       attestations: write
       id-token: write
     steps:
-      - name: Notify to Slack
-        uses: slackapi/slack-github-action@v1.26.0
-        with:
-          payload: |
-            {
-              "branch": "${{ github.ref_name }}",
-              "tag": "${{ env.TAG }}",
-              "state": "Started"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_STATE_NOTIFICATION_SLACK_WEBHOOK_URL }}
       - name: Check out the repo
         uses: actions/checkout@v4
         
@@ -60,16 +46,3 @@ jobs:
           platforms: |
             linux/amd64
             linux/arm64
-
-      - name: Notify to Slack
-        if: always()
-        uses: slackapi/slack-github-action@v1.26.0
-        with:
-          payload: |
-            {
-              "branch": "${{ github.ref_name }}",
-              "tag": "${{ env.TAG }}",
-              "state": "${{ job.status }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_STATE_NOTIFICATION_SLACK_WEBHOOK_URL }}
