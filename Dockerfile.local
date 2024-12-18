@@ -15,11 +15,13 @@ ARG     OME_VERSION=local
 ARG 	STRIP=TRUE
 
 ## Copy code to image
-COPY    ./ ${TEMP_DIR}/
+COPY    ./misc/  ${TEMP_DIR}/misc/
 
 ## Install dependencies
 RUN \
         ${TEMP_DIR}/misc/prerequisites.sh 
+
+COPY    ./ ${TEMP_DIR}/
 
 ## Build OvenMediaEngine
 RUN \
